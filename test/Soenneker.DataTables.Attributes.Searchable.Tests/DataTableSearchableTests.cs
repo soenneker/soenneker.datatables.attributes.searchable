@@ -1,11 +1,10 @@
-﻿using Soenneker.Tests.Unit;
-using Xunit;
+using Soenneker.Tests.Unit;
 
 namespace Soenneker.DataTables.Attributes.Searchable.Tests;
 
 public sealed class DataTableSearchableTests : UnitTest
 {
-    [Fact]
+    [Test]
     public void Default()
     {
 
