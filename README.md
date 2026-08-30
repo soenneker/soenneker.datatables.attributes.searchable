@@ -5,28 +5,40 @@
 
 # Soenneker.DataTables.Attributes.Searchable
 
-Indicates that a property should be used for search operations in DataTables.
+`DataTableSearchableAttribute` marks model properties that a server-side DataTables query layer may include in search operations.
 
-## Install
+## Installation
 
 ```bash
 dotnet add package Soenneker.DataTables.Attributes.Searchable
 ```
 
-## Quick start
+## Usage
 
 ```csharp
 using Soenneker.DataTables.Attributes.Searchable;
 
-public sealed class Request
+public sealed class CustomerRow
 {
     [DataTableSearchable]
-    public string? Value { get; init; }
+    public required string Name { get; init; }
+
+    [DataTableSearchable]
+    public required string Email { get; init; }
+
+    public string? InternalNote { get; init; }
 }
 ```
 
-Indicates that a property should be used for search operations in DataTables.
+Use reflection to build an explicit allow-list for a server-side search expression:
 
-## What you get
+```csharp
+using System.Reflection;
 
-- `DataTableSearchableAttribute` — Indicates that a property should be used for search operations in DataTables.
+PropertyInfo[] searchableProperties = typeof(CustomerRow)
+    .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+    .Where(property => property.IsDefined(typeof(DataTableSearchableAttribute)))
+    .ToArray();
+```
+
+This package does not parse requests or generate queries. The consuming layer decides how each marked type is searched. Parameterize user-supplied search text, and avoid applying string operations indiscriminately to dates, numbers, or identifiers.
